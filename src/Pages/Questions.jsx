@@ -244,7 +244,7 @@ const Questions = ({ topic }) => {
           </p>
           <button
             onClick={() => setShowQuiz(true)}
-            className="px-6 py-3 bg-[#E6A7F6] text-black text-sm sm:text-base font-semibold rounded-xl hover:bg-white/80 transition-all duration-300 w-full sm:w-auto"
+            className="px-6 py-3 bg-[#E6A7F6] cursor-pointer text-black text-sm sm:text-base font-semibold rounded-xl hover:bg-white/80 transition-all duration-300 w-full sm:w-auto"
           >
             Continue ➡
           </button>
@@ -296,7 +296,7 @@ const Questions = ({ topic }) => {
           <button
             onClick={prevQuestion}
             disabled={current === 0}
-            className="flex-1 sm:flex-none px-4 py-2 bg-[#E6A7F6]/30 rounded-lg hover:bg-[#E6A7F6]/50 disabled:opacity-40 text-center"
+            className="flex-1 sm:flex-none px-4 py-2 cursor-pointer bg-[#E6A7F6]/30 rounded-lg hover:bg-[#E6A7F6]/50 disabled:opacity-40 text-center"
           >
             ⬅ PREVIOUS
           </button>
@@ -304,7 +304,7 @@ const Questions = ({ topic }) => {
           {showAnswer ? (
             <button
               onClick={nextQuestion}
-              className="flex-1 sm:flex-none px-4 py-2 bg-[#E6A7F6] text-black font-semibold rounded-lg hover:bg-white/90"
+              className="flex-1 sm:flex-none px-4 py-2 cursor-pointer bg-[#E6A7F6] text-black font-semibold rounded-lg hover:bg-white/90"
             >
               NEXT ➡
             </button>
