@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Loader = ({topic}) => {
+const Loader = ({topic,feedback}) => {
   return (
       <div className="w-full   flex flex-col justify-center items-center  text-[#E6A7F6]">
         <div className="relative w-24 h-24 mb-6">
@@ -10,10 +10,14 @@ const Loader = ({topic}) => {
           {/* Inner glow */}
           <div className="absolute inset-4 rounded-full border-2 border-[#E6A7F6]/40 animate-pulse"></div>
         </div>
-
-        <p className="text-xl font-medium text-center animate-pulse">
+       {
+        !feedback ?( <p className="text-xl font-medium text-center animate-pulse">
           Hold On Generating quiz on <span className="text-white">{topic}</span>...
-        </p>
+        </p>):(<p className="text-xl font-medium text-center animate-pulse">
+          Hold On    <span className="text-white">{topic}</span>...
+        </p>)
+       }
+       
       </div>
   )
 }

@@ -3,7 +3,7 @@ import Loader from "../components/Loader";
 import { toast } from "react-toastify";
 import Result from "./Result";
 import { FaHome } from "react-icons/fa";
-import { useNavigate } from "react-router-dom"; // ✅ to navigate to main page
+import { useNavigate } from "react-router-dom";
 
 const Questions = ({ topic }) => {
   const [data, setData] = useState([]);
@@ -18,9 +18,11 @@ const Questions = ({ topic }) => {
   const [suggestion, setSuggestion] = useState("");
   const [loadingSuggestion, setLoadingSuggestion] = useState(false);
   const [answers, setAnswers] = useState({});
-  const navigate = useNavigate(); // ✅ hook for navigation
+  const [feedback, setFeedback] = useState(false); // ✅ corrected state name
 
-  // Fetch quiz data from Gemini API
+  const navigate = useNavigate();
+
+  // ✅ Fetch quiz data from Gemini API
   useEffect(() => {
     if (!topic || data.length > 0) return;
 
@@ -96,6 +98,7 @@ const Questions = ({ topic }) => {
     fetchQuestions();
   }, [topic]);
 
+  // ✅ Parse each question block
   const parseQuestion = (text) => {
     const lines = text.split("\n").filter((l) => l.trim() !== "");
     const question = lines[0] || "";
@@ -109,21 +112,26 @@ const Questions = ({ topic }) => {
     return { question, options, correctAnswer };
   };
 
+  // ✅ Handle option selection
   const handleSelect = (option, correctAnswer) => {
     setSelected(option);
     setShowAnswer(true);
     const isCorrect = option.includes(correctAnswer);
+
     setAnswers((prev) => ({
       ...prev,
       [current]: { selected: option, correctAnswer, isCorrect },
     }));
+
     if (isCorrect) setScore((prev) => prev + 2);
   };
 
+  // ✅ Handle next question
   const nextQuestion = () => {
     if (current < data.length - 1) {
       const nextIndex = current + 1;
       setCurrent(nextIndex);
+
       if (answers[nextIndex]) {
         setSelected(answers[nextIndex].selected);
         setShowAnswer(true);
@@ -137,10 +145,12 @@ const Questions = ({ topic }) => {
     }
   };
 
+  // ✅ Handle previous question
   const prevQuestion = () => {
     if (current > 0) {
       const prevIndex = current - 1;
       setCurrent(prevIndex);
+
       if (answers[prevIndex]) {
         setSelected(answers[prevIndex].selected);
         setShowAnswer(true);
@@ -151,10 +161,12 @@ const Questions = ({ topic }) => {
     }
   };
 
+  // ✅ Generate AI feedback suggestion
   const generateSuggestion = async () => {
     try {
       setLoadingSuggestion(true);
       const percentage = Math.round((score / (data.length * 2)) * 100);
+
       const prompt = `
       Based on a quiz performance report:
       - Topic: ${topic}
@@ -185,7 +197,10 @@ const Questions = ({ topic }) => {
     }
   };
 
-  if (loading) return <Loader topic={topic} />;
+  // ✅ Loader during fetch
+  if (loading) return <Loader topic={topic} feedback={false} />;
+
+  // ✅ No data case
   if (data.length === 0)
     return (
       <div className="w-full h-screen flex justify-center items-center text-white text-lg text-center px-4">
@@ -193,6 +208,7 @@ const Questions = ({ topic }) => {
       </div>
     );
 
+  // ✅ Show Result Screen
   if (showResult) {
     const percentage = Math.round((score / (data.length * 2)) * 100);
     return (
@@ -202,16 +218,18 @@ const Questions = ({ topic }) => {
         data={data}
         loadingSuggestion={loadingSuggestion}
         percentage={percentage}
+        feedback={true}
       />
     );
   }
 
+  // ✅ Intro Screen
   if (!showQuiz) {
     return (
       <div className="relative w-full min-h-screen flex flex-col justify-center items-center px-4 sm:px-8 md:px-24 text-white">
         {/* 🏠 Home Button */}
         <button
-          onClick={() => window.location.reload()}
+          onClick={() => navigate("/")}
           className="absolute top-5 left-5 text-white cursor-pointer hover:text-[#E6A7F6] transition-colors duration-300"
         >
           <FaHome className="text-3xl sm:text-4xl" />
@@ -235,6 +253,7 @@ const Questions = ({ topic }) => {
     );
   }
 
+  // ✅ Active Quiz Screen
   const { question, options, correctAnswer } = parseQuestion(data[current]);
 
   return (

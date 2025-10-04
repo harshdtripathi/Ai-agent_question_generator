@@ -2,7 +2,7 @@ import React from 'react'
 import { MdCelebration } from "react-icons/md";
 import Loader from '../components/Loader';
 
-const Result = ({suggestion,score,data,loadingSuggestion,percentage}) => {
+const Result = ({suggestion,score,data,loadingSuggestion,percentage,feedback}) => {
   return (
     <div className="w-full h-auto flex flex-col justify-center items-center text-white">
         <div className="bg-[#0c022b]/70 h-[40%] p-8 rounded-3xl shadow-xl text-center w-full md:w-[50%]">
@@ -24,7 +24,7 @@ const Result = ({suggestion,score,data,loadingSuggestion,percentage}) => {
           {/* AI-generated suggestion */}
           {loadingSuggestion ? (
             <div className="flex justify-center ">
-              <Loader topic="Generating feedback..." />
+              <Loader topic="Generating feedback..." feedback={feedback}  />
             </div>
           ) : (
             <p className="text-base text-white/80 mb-8 border-t border-white/20 pt-4 italic">
