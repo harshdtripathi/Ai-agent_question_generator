@@ -138,9 +138,9 @@ Add difficulty-level selection before starting quiz.
 
 Implement leaderboard and user profiles.
 
-Use Zustand or Redux for scalable state management write now since we dont have to managa a lots of state so we are using state variable only to store and update state
+Use Zustand or Redux for scalable state management write now since we dont have to managa a lots of state so we are using state variable only to store and update state.
 
-Add animations and progress bar for timer visualization.
+
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Visit%20Now-brightgreen?style=for-the-badge&logo=netlify)](https://ai-based-question-generator.netlify.app/)
 
