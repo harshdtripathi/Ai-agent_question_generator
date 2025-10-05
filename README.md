@@ -1,16 +1,89 @@
-# React + Vite
+ An interactive AI-powered quiz platform built using React and TailwindCSS, integrated with the Google Gemini API.
+This app dynamically generates multiple-choice questions (MCQs) based on a topic entered by the user.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+It provides:
 
-Currently, two official plugins are available:
+⏱️ A 30-second timer per question — once the time runs out, the candidate can no longer answer.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🤖 Personalized AI feedback at the end of the quiz based on performance.
 
-## React Compiler
+⚡ A seamless and responsive user interface powered by TailwindCSS.
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+The Gemini API is used to generate quiz questions and feedback.
+It works by sending a prompt inside the request body (cURL or fetch call) to the Gemini model endpoint.
+The prompt instructs the model to generate 10 MCQ-style questions with 4 options and a clearly marked correct answer for the selected topic.
 
-## Expanding the ESLint configuration
+Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+💬 AI-Generated Quizzes – Generates topic-specific questions and answers using Google Gemini API.
+
+⏱️ 30-Second Timer – Automatically locks answering after time runs out.
+
+🧩 Multiple-Choice Interface – Users can navigate between questions with instant visual feedback.
+
+🎯 Auto-Scoring – Calculates total score dynamically.
+
+💡 AI Feedback – Gemini generates personalized motivational feedback after the quiz.
+
+🏠 Clean UI – Responsive and styled with Tailwind CSS.
+
+Tech Stack
+
+Frontend-React.js + Vite
+Styling	-Tailwind CSS
+Icons-	React Icons
+Notifications-	React Toastify
+API	Google Gemini 2.5 Flash Model(since it is free and provide quite large number of tokens)
+State Management	-React Hooks (useState, useEffect)
+
+
+Architecture Overview------
+Frontend Architecture
+
+Entry Point: main.jsx → renders App.jsx
+
+Routing: / (Home) → /quiz (Questions Component) → /result (Result Component)
+
+API Calls: Made directly from Questions.jsx to Gemini API using fetch.
+
+Component Structure:
+
+src/
+├── components/
+│   ├── Loader.jsx (custom loader) for showing loading
+│   └── Result.jsx (final result component)
+├── pages/
+│   └── Questions.jsx
+├── App.jsx
+├── main.jsx
+└── index.css
+
+
+State Management Choices
+
+useState for local states (score, timer, questions, etc.).
+
+useEffect for side effects like API calls and countdown timers.
+
+answers stored in an object keyed by question index for efficient lookup.
+
+Reason: React hooks provide simplicity and isolation of logic per question; Redux or Context wasn’t necessary for this scale.
+
+Prompts Used (for Gemini API)
+
+You are a quiz master.
+Begin with a short introduction for the candidate (1–2 lines).
+Then generate 10 multiple-choice questions (easy to hard) with 4 options and the correct answer clearly mentioned.
+Topic: ${topic}.
+Format strictly as:
+Intro text
+Q1. question
+A) option1
+B) option2
+C) option3
+D) option4
+Answer: correct option
+
+
+
+
