@@ -18,7 +18,11 @@ const Questions = ({ topic }) => {
   const [suggestion, setSuggestion] = useState("");
   const [loadingSuggestion, setLoadingSuggestion] = useState(false);
   const [answers, setAnswers] = useState({});
-  const [feedback, setFeedback] = useState(false); // ✅ corrected state name
+  const [feedback, setFeedback] = useState(false);
+
+  // ⏱ Timer states
+  const [timeLeft, setTimeLeft] = useState(30);
+  const [isTimeOver, setIsTimeOver] = useState(false);
 
   const navigate = useNavigate();
 
@@ -114,6 +118,7 @@ const Questions = ({ topic }) => {
 
   // ✅ Handle option selection
   const handleSelect = (option, correctAnswer) => {
+    if (isTimeOver) return; // ⏱ prevent selecting after time over
     setSelected(option);
     setShowAnswer(true);
     const isCorrect = option.includes(correctAnswer);
@@ -131,6 +136,10 @@ const Questions = ({ topic }) => {
     if (current < data.length - 1) {
       const nextIndex = current + 1;
       setCurrent(nextIndex);
+
+      // ⏱ Reset timer
+      setTimeLeft(30);
+      setIsTimeOver(false);
 
       if (answers[nextIndex]) {
         setSelected(answers[nextIndex].selected);
@@ -151,6 +160,10 @@ const Questions = ({ topic }) => {
       const prevIndex = current - 1;
       setCurrent(prevIndex);
 
+      // ⏱ Reset timer for previous question
+      setTimeLeft(30);
+      setIsTimeOver(false);
+
       if (answers[prevIndex]) {
         setSelected(answers[prevIndex].selected);
         setShowAnswer(true);
@@ -160,6 +173,20 @@ const Questions = ({ topic }) => {
       }
     }
   };
+
+  //  Timer effect
+  useEffect(() => {
+    if (showAnswer) return; // pause timer when question is answered
+    if (!showQuiz) return; // start only in quiz
+
+    if (timeLeft > 0) {
+      const timer = setTimeout(() => setTimeLeft((t) => t - 1), 1000);
+      return () => clearTimeout(timer);
+    } else {
+      setIsTimeOver(true);
+      setShowAnswer(true); 
+    }
+  }, [timeLeft, showAnswer, showQuiz]);
 
   // ✅ Generate AI feedback suggestion
   const generateSuggestion = async () => {
@@ -197,10 +224,8 @@ const Questions = ({ topic }) => {
     }
   };
 
-  // ✅ Loader during fetch
   if (loading) return <Loader topic={topic} feedback={false} />;
 
-  // ✅ No data case
   if (data.length === 0)
     return (
       <div className="w-full h-screen flex justify-center items-center text-white text-lg text-center px-4">
@@ -208,7 +233,6 @@ const Questions = ({ topic }) => {
       </div>
     );
 
-  // ✅ Show Result Screen
   if (showResult) {
     const percentage = Math.round((score / (data.length * 2)) * 100);
     return (
@@ -223,11 +247,9 @@ const Questions = ({ topic }) => {
     );
   }
 
-  // ✅ Intro Screen
   if (!showQuiz) {
     return (
       <div className="relative w-full min-h-screen flex flex-col justify-center items-center px-4 sm:px-8 md:px-24 text-white">
-        {/* 🏠 Home Button */}
         <button
           onClick={() => navigate("/")}
           className="absolute top-5 left-5 text-white cursor-pointer hover:text-[#E6A7F6] transition-colors duration-300"
@@ -253,20 +275,27 @@ const Questions = ({ topic }) => {
     );
   }
 
-  // ✅ Active Quiz Screen
   const { question, options, correctAnswer } = parseQuestion(data[current]);
 
   return (
     <div className="relative w-full min-h-screen flex flex-col justify-center items-center px-4 sm:px-8 md:px-24 text-white overflow-x-hidden">
-      {/* 🏠 Home Button */}
       <button
-        onClick={() => navigate("/")}
+        onClick={() => window.location.reload()}
         className="absolute top-5 left-5 text-white hover:text-[#E6A7F6] transition-colors duration-300"
       >
         <FaHome className="text-3xl sm:text-4xl" />
       </button>
 
       <div className="w-full max-w-[700px] bg-[#0c022b]/70 p-6 sm:p-8 rounded-3xl shadow-2xl text-center">
+        {/* ⏱ Timer Display */}
+        <div
+          className={`text-lg sm:text-xl font-semibold mb-4 ${
+            timeLeft <= 5 ? "text-red-500" : "text-[#E6A7F6]"
+          }`}
+        >
+          Time Left: {timeLeft}s
+        </div>
+
         <h2 className="text-lg sm:text-2xl font-bold text-[#E6A7F6] mb-6 sm:mb-8">
           {question.replace(/^\d+\.\s*/, "")}
         </h2>
@@ -276,7 +305,7 @@ const Questions = ({ topic }) => {
             <button
               key={i}
               onClick={() => handleSelect(option, correctAnswer)}
-              disabled={showAnswer}
+              disabled={showAnswer || isTimeOver}
               className={`text-sm sm:text-lg py-3 px-2 rounded-xl border transition-all duration-300 break-words ${
                 showAnswer
                   ? option.includes(correctAnswer)
@@ -291,6 +320,12 @@ const Questions = ({ topic }) => {
             </button>
           ))}
         </div>
+
+        {isTimeOver && (
+          <p className="mt-3 text-red-400 font-semibold">
+            ⏰ Time’s up! You can’t answer this question now.
+          </p>
+        )}
 
         <div className="flex justify-between mt-8 sm:mt-10 text-xs sm:text-base flex-wrap gap-3">
           <button
