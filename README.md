@@ -84,6 +84,71 @@ C) option3
 D) option4
 Answer: correct option
 
+## 🖼️ Screenshots
+<!-- Desktop screen and mobile screen -->
+
+### 🏠 Home Screen
+<!-- desktop screen -->
+![Home Screen](./screenshots/Screenshot%20(117).png)
+<!-- mobile screen -->
+![Home Screen](./screenshots/mobile_view4.jpg)
+
+
+
+### ❓ Quiz Screen
+<!-- desktop screen -->
+![Quiz Screen](./screenshots//Screenshot%20(121).png)
+<!-- mobile screen -->
+![Quiz screen](./screenshots/mobile_view1.jpg)
+
+### ⏱️ Timer Running
+<!-- desktop screen -->
+![Timer](./screenshots/Screenshot%20(122).png)
+<!-- mobile screen -->
+![Timer](./screenshots/mobile_view1.jpg)
+
+
+### 🏁 Result with AI Feedback
+![Result Screen](./screenshots/Screenshot%20(124).png)
+
+
+
+### Loader running
+![Timer](./screenshots/Screenshot%20(118).png)
+<!-- mobile screen -->
+![Timer](./screenshots/mobile_view3.jpg)
+
+🧩 Known Issues
+
+Gemini API sometimes returns malformed question formatting because of free version which has limitations it might face downtime when number of user increases
+
+Retry mechanism may not always succeed when the API is overloaded.
+
+Timer continues if user navigates away from tab (minor UX issue).
+
+No persistence — quiz resets on refresh, as we are not using database like of firebase ,mongodb etc write now.
+
+Potential Improvements----
+
+Store quiz history and scores in Firebase or localStorage so that user can able to see
+
+authenticate user before entering into the quiz so that dataof user can be stored 
+
+Add difficulty-level selection before starting quiz.
+
+Implement leaderboard and user profiles.
+
+Use Zustand or Redux for scalable state management write now since we dont have to managa a lots of state so we are using state variable only to store and update state
+
+Add animations and progress bar for timer visualization.
+
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Visit%20Now-brightgreen?style=for-the-badge&logo=netlify)](https://ai-based-question-generator.netlify.app/)
+
+
+
+
+
+
 
 
 
